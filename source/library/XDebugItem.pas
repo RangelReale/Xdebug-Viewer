@@ -19,6 +19,7 @@ type
       FMemoryEnd: cardinal;
       FFunctionName: string;
       FFunctionType: TXFunctionType;
+      FIncludeFile: string;
       FFileName: string;
       FFileLine: cardinal;
       FParamCount: word;
@@ -28,6 +29,11 @@ type
       FChildCount: cardinal;
       FChildren: TXItemArray;
       ChildrenCapacity: cardinal;
+      FFunctionNo: Integer;
+      FDebugMemoryUsage: Integer;
+      function GetOwnMemory: Integer;
+      function GetChildMemory: Integer;
+      function GetMemoryTotal: Integer;
     public
       constructor Create(InitLevel: Cardinal); overload;
       constructor Create(LineData: TStringArray; Parent: PXItem; Stream: TFileStream); overload;
@@ -39,12 +45,14 @@ type
       procedure Free;
 
       property Level: word read FLevel;
+      property FunctionNo: Integer read FFunctionNo;
       property TimeStart: single read FTimeStart;
       property TimeEnd: single read FTimeEnd;
       property MemoryStart: cardinal read FMemoryStart;
       property MemoryEnd: cardinal read FMemoryEnd;
       property FunctionName: string read FFunctionName;
       property FunctionType: TXFunctionType read FFunctionType;
+      property IncludeFile: string read FIncludeFile;
       property FileName: string read FFileName;
       property FileLine: cardinal read FFileLine;
       property ParamCount: word read FParamCount;
@@ -53,6 +61,13 @@ type
       property Parent: PXItem read FParent;
       property ChildCount: cardinal read FChildCount;
       property Children[Index: cardinal]: PXItem read GetChild;
+
+      property MemoryTotal: Integer read GetMemoryTotal;
+
+      property OwnMemory: Integer read GetOwnMemory;
+      property ChildMemory: Integer read GetChildMemory;
+
+      property DebugMemoryUsage: Integer read FDebugMemoryUsage write FDebugMemoryUsage;
   end;
 
 implementation
@@ -62,6 +77,7 @@ uses SysUtils;
 constructor TXItem.Create(initLevel: Cardinal);
 begin
   FLevel := initLevel;
+  FFunctionNo := 0;
   FTimeStart := 0;
   FTimeEnd := 0;
   FMemoryStart := 0;
@@ -84,6 +100,7 @@ begin
     raise Exception.Create('Invalid file line provided');
 
   FLevel := StrToInt(LineData[0]);
+  FFunctionNo := StrToInt(LineData[1]);
   FTimeStart := StrToFloat(LineData[3]);
   FMemoryStart := StrToInt(LineData[4]);
   FFunctionName := LineData[5];
@@ -91,6 +108,7 @@ begin
     FFunctionType := XFT_USER_DEFINED
   else
     FFunctionType := XFT_INTERNAL;
+  FIncludeFile := LineData[7];
   FFileName := LineData[8];
   FFileLine := StrToInt(LineData[9]);
   FParamCount := StrToInt(Linedata[10]);
@@ -117,9 +135,30 @@ begin
   Result := FChildren;
 end;
 
+function TXItem.GetMemoryTotal: Integer;
+begin
+  Result := FMemoryEnd - FMemoryStart;
+end;
+
+function TXItem.GetOwnMemory: Integer;
+begin
+  Result := MemoryTotal - ChildMemory;
+end;
+
 function TXItem.GetChild(Index: cardinal): PXItem;
 begin
   Result := FChildren[Index];
+end;
+
+function TXItem.GetChildMemory: Integer;
+var
+  I: Integer;
+begin
+  Result := 0;
+  for I := 0 to ChildCount - 1 do
+  begin
+    Result := Result + Children[I].MemoryTotal;
+  end;
 end;
 
 procedure TXItem.AddChild(Child: PXItem);

@@ -119,7 +119,7 @@
 			<Linker Name="ExeDescription"></Linker>
 		</Linker>
 		<Directories>
-			<Directories Name="OutputDir">D:\_weby\data\www\work\X-anal\binary</Directories>
+			<Directories Name="OutputDir">..\binary</Directories>
 			<Directories Name="UnitOutputDir"></Directories>
 			<Directories Name="PackageDLLOutputDir"></Directories>
 			<Directories Name="PackageDCPOutputDir"></Directories>
@@ -164,7 +164,7 @@
 			<VersionInfoKeys Name="FileDescription"></VersionInfoKeys>
 			<VersionInfoKeys Name="FileVersion">0.1.1.1</VersionInfoKeys>
 			<VersionInfoKeys Name="InternalName">xdebugviewer</VersionInfoKeys>
-			<VersionInfoKeys Name="LegalCopyright">(C) 2011 Ondřej Nešpor</VersionInfoKeys>
+			<VersionInfoKeys Name="LegalCopyright">(C) 2011 Ondrej Nešpor</VersionInfoKeys>
 			<VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys>
 			<VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys>
 			<VersionInfoKeys Name="ProductName">Xdebug Viewer</VersionInfoKeys>

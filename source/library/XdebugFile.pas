@@ -13,6 +13,7 @@ type
       FRoot: PXItem;
       FTerminated: boolean;
       Stream: TFileStream;
+      FLastMemory: Integer;
       function ParseLine(const Line: string; ItemParent: PXItem): PXItem;
     public
       constructor Create(Filename: string);
@@ -129,6 +130,7 @@ procedure XFile.Parse;
       TextStream: TTextStream;
 begin
   Parent := Root;
+  FLastMemory := -1;
 
   Stream.Seek(0, soFromBeginning);
   TextStream := TTextStream.Create(Stream);
@@ -173,6 +175,8 @@ begin
 
     ItemParent^.Finish(Items);
     Result := ItemParent;
+
+    FLastMemory := Result^.MemoryEnd;
   end else if L = 12 then begin
     // Call start
     while ItemParent^.Level >= ItemLevel do begin
@@ -185,6 +189,15 @@ begin
     New(Result);
     Result^ := TXItem.Create(Items, ItemParent, Stream);
     ItemParent.AddChild(Result);
+
+    // XDebug user friendly output seems to calculate memory usage this way.
+    // The end result seems more logic, but I can't understand the programming logic.
+    if FLastMemory >= 0 then
+      Result^.DebugMemoryUsage := Result^.MemoryStart - FLastMemory
+    else
+      Result^.DebugMemoryUsage := 0;
+
+    FLastMemory := Result^.MemoryStart;
   end;
 end;
 

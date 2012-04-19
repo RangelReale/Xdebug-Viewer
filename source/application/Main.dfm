@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Xdebug viewer'
-  ClientHeight = 162
-  ClientWidth = 650
+  ClientHeight = 471
+  ClientWidth = 1184
   Color = clBtnFace
   Constraints.MinHeight = 200
   Constraints.MinWidth = 650
@@ -13,6 +13,7 @@ object Form1: TForm1
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
@@ -20,8 +21,8 @@ object Form1: TForm1
   TextHeight = 13
   object StatusBar: TStatusBar
     Left = 0
-    Top = 144
-    Width = 650
+    Top = 453
+    Width = 1184
     Height = 18
     Panels = <
       item
@@ -32,6 +33,8 @@ object Form1: TForm1
         Width = 50
       end>
     OnDrawPanel = StatusBarDrawPanel
+    ExplicitTop = 460
+    ExplicitWidth = 683
   end
   object ProgressBar: TProgressBar
     Left = 208
@@ -43,8 +46,8 @@ object Form1: TForm1
   object TreeView: TVirtualStringTree
     Left = 0
     Top = 0
-    Width = 650
-    Height = 144
+    Width = 1184
+    Height = 453
     Align = alClient
     Header.AutoSizeIndex = 7
     Header.DefaultHeight = 17
@@ -70,6 +73,8 @@ object Form1: TForm1
     OnInitChildren = TreeViewInitChildren
     OnInitNode = TreeViewInitNode
     OnKeyDown = FormKeyDown
+    ExplicitWidth = 650
+    ExplicitHeight = 144
     Columns = <
       item
         Position = 0
@@ -108,7 +113,7 @@ object Form1: TForm1
       end
       item
         Position = 7
-        Width = 126
+        Width = 660
         WideText = 'File name'
       end>
   end
@@ -144,6 +149,13 @@ object Form1: TForm1
     object Closefile1: TMenuItem
       Action = CloseFileAction
       Caption = 'Close file'
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object MemoryAnalysis1: TMenuItem
+      Caption = 'Memory Analysis'
+      OnClick = MemoryAnalysis1Click
     end
   end
 end

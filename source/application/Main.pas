@@ -23,6 +23,8 @@ type
     Openfile1: TMenuItem;
     Closefile1: TMenuItem;
     CloseFileAction: TAction;
+    N1: TMenuItem;
+    MemoryAnalysis1: TMenuItem;
     procedure OpenFileActionExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StatusBarDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
@@ -43,6 +45,7 @@ type
     procedure PopupMenu1Popup(Sender: TObject);
     procedure TreeViewInitChildren(Sender: TBaseVirtualTree; Node: PVirtualNode;
       var ChildCount: Cardinal);
+    procedure MemoryAnalysis1Click(Sender: TObject);
   private
     XDebugFile: XFile;
     Processing: boolean;
@@ -58,7 +61,7 @@ var
 
 implementation
 
-uses Math;
+uses Math, Memory;
 
 {$R *.dfm}
 
@@ -116,6 +119,21 @@ begin
       XDebugFile.Terminate;
     end;
   end;
+end;
+
+procedure TForm1.MemoryAnalysis1Click(Sender: TObject);
+begin
+     MemoryForm := TMemoryForm.Create(self, XDebugFile);
+
+     MemoryForm.Show;
+
+     {
+     try
+        MemoryForm.ShowModal;
+     finally
+        MemoryForm.Free;
+     end;
+     }
 end;
 
 procedure TForm1.OpenFileActionExecute(Sender: TObject);
@@ -193,7 +211,7 @@ begin
   with NodeData.Data^ do
     case Column of
       -1, 6:
-        CellText := FunctionName;
+        CellText := FunctionName+' ('+IntToStr(FunctionNo)+')';
       0:
         CellText := FormatFloat(TimeStart, 6);
       1:
@@ -209,11 +227,14 @@ begin
           CellText := 'FINISH'
         else begin
           Delta := MemoryEnd - MemoryStart;
-          CellText := Format('%s%.0n', [FormatSign(Delta), Abs(Delta) * 1.0]);
+          CellText := Format('%s%.0n (%.0n) (%.0n)', [FormatSign(Delta), Abs(Delta) * 1.0, OwnMemory * 1.0, DebugMemoryUsage * 1.0]);
         end;
       end;
-      7:
+      7: begin
         CellText := Format('%s (%d)', [FileName, FileLine]);
+        if IncludeFile<>'' then
+          CellText := CellText + ' - ' +IncludeFile;
+      end;
     end;
 end;
 
