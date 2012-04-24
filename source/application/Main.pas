@@ -290,8 +290,8 @@ end;
 
 procedure TForm1.UpdateProgress(Sender: TObject; const Position: Cardinal; const Total: Cardinal);
 begin
-  ProgressBar.Max := Total;
-  ProgressBar.Position := Position;
+  ProgressBar.Max := 100;
+  ProgressBar.Position := Trunc(Position*100/Total);
   application.ProcessMessages;
 end;
 

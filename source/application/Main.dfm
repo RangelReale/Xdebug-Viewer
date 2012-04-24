@@ -33,8 +33,6 @@ object Form1: TForm1
         Width = 50
       end>
     OnDrawPanel = StatusBarDrawPanel
-    ExplicitTop = 460
-    ExplicitWidth = 683
   end
   object ProgressBar: TProgressBar
     Left = 208
@@ -73,8 +71,6 @@ object Form1: TForm1
     OnInitChildren = TreeViewInitChildren
     OnInitNode = TreeViewInitNode
     OnKeyDown = FormKeyDown
-    ExplicitWidth = 650
-    ExplicitHeight = 144
     Columns = <
       item
         Position = 0
